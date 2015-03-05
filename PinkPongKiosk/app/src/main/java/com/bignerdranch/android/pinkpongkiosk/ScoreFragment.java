@@ -9,12 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapListener {
 
     private static final String TAG = "ScoreFragment";
     //model vars; maybe make a player that has an id and a score
-    private int mScoreA;
+    private int mScoreA; //score can be incremented, decremented, and reset
     private int mScoreB;
+    private String mPlayerAId; //player has a score; has an id
+    private String mPlayerBId;
 
     //view items
     private TextView mScoreATextView;
@@ -30,8 +35,13 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
 
         //init mScoreA and mScoreB
         //not sure if we will worry about rotation or just lock to portrait mode for now
-        mScoreA = 42;
-        mScoreB = 15;
+        mScoreA = 0;
+        mScoreB = 0;
+
+        mPlayerAId = "1";
+        mPlayerBId = "2";
+
+
     }
 
     @Override
@@ -64,6 +74,13 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
     public void onPlayerTapped(String playerId) {
         //increment score for correct player
         Log.d(TAG, "onPlayerTapped " + playerId);
+        if (mPlayerAId.equals(playerId)) {
+            mScoreA++;
+        } else { //player B gets a point if someone other than them scores...oh well
+            mScoreB++;
+        }
+
+        updateUI();
     }
 
     private void updateUI(){
