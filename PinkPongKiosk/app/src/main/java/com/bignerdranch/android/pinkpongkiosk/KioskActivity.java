@@ -5,12 +5,11 @@ import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-public class KioskActivity extends SingleFragmentActivity {
+public class KioskActivity extends NfcSinglFragmentActivity {
 
     private static final String TAG = "KioskActivity";
     private PlayerTapListener mPlayerTapListener;
@@ -28,6 +27,26 @@ public class KioskActivity extends SingleFragmentActivity {
         return ScoreFragment.newInstance();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        /**
+         * It's important, that the activity is in the foreground (resumed). Otherwise
+         * an IllegalStateException is thrown.
+         */
+        setupForegroundDispatch();
+    }
+
+    @Override
+    protected void onPause() {
+        /**
+         * Call this before onPause, otherwise an IllegalArgumentException is thrown as well.
+         */
+        stopForegroundDispatch();
+
+        super.onPause();
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -56,5 +75,6 @@ public class KioskActivity extends SingleFragmentActivity {
         id = uri.getQueryParameter("id");
         return id;
     }
+
 
 }
