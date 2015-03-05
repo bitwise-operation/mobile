@@ -1,14 +1,17 @@
 package com.bignerdranch.android.pinkpongkiosk;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class ScoreFragment extends Fragment {
+public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapListener {
 
+    private static final String TAG = "ScoreFragment";
     //model vars; maybe make a player that has an id and a score
     private int mScoreA;
     private int mScoreB;
@@ -32,6 +35,13 @@ public class ScoreFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        ((KioskActivity)activity).setPlayerTapListener(this);
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_score, container, false);
@@ -44,8 +54,22 @@ public class ScoreFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        ((KioskActivity)getActivity()).setPlayerTapListener(null);
+    }
+
+    @Override
+    public void onPlayerTapped(String playerId) {
+        //increment score for correct player
+        Log.d(TAG, "onPlayerTapped " + playerId);
+    }
+
     private void updateUI(){
         mScoreATextView.setText(Integer.toString(mScoreA));
         mScoreBTextView.setText(Integer.toString(mScoreB));
     }
+
+
 }
