@@ -80,7 +80,7 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
             mScoreB++;
         }
 
-        updateUI();
+        updateUI(); //consider updating only the affected score text view is lag is a problem
     }
 
     private void updateUI(){
