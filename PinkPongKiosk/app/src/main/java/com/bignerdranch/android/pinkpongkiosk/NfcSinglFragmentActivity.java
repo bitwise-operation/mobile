@@ -24,6 +24,28 @@ public abstract class NfcSinglFragmentActivity extends SingleFragmentActivity {
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        /**
+         * It's important, that the activity is in the foreground (resumed). Otherwise
+         * an IllegalStateException is thrown.
+         */
+        setupForegroundDispatch();
+    }
+
+    @Override
+    protected void onPause() {
+        /**
+         * Call this before onPause, otherwise an IllegalArgumentException is thrown as well.
+         */
+        stopForegroundDispatch();
+
+        super.onPause();
+    }
+
+
     protected void setupForegroundDispatch() {
         final Intent intent = new Intent(getApplicationContext(), getClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

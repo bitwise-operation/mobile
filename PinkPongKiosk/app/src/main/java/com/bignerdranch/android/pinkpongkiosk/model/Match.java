@@ -1,8 +1,9 @@
 package com.bignerdranch.android.pinkpongkiosk.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Match {
+public class Match implements Serializable{
 
     private int mId;
     private Player mPlayer1; //creator

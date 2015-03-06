@@ -27,26 +27,6 @@ public class KioskActivity extends NfcSinglFragmentActivity {
         return ScoreFragment.newInstance();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        /**
-         * It's important, that the activity is in the foreground (resumed). Otherwise
-         * an IllegalStateException is thrown.
-         */
-        setupForegroundDispatch();
-    }
-
-    @Override
-    protected void onPause() {
-        /**
-         * Call this before onPause, otherwise an IllegalArgumentException is thrown as well.
-         */
-        stopForegroundDispatch();
-
-        super.onPause();
-    }
 
     @Override
     protected void onNewIntent(Intent intent) {

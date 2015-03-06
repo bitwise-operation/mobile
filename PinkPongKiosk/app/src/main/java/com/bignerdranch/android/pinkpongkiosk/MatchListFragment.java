@@ -1,5 +1,6 @@
 package com.bignerdranch.android.pinkpongkiosk;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -97,6 +98,8 @@ public class MatchListFragment extends Fragment {
             mAvatar2 = (CircleImageView) itemView.findViewById(R.id.match_list_item_avatar2);
             mName2 = (TextView) itemView.findViewById(R.id.match_list_item_name2);
             mWins2 = (TextView) itemView.findViewById(R.id.match_list_item_wins2);
+
+            mStartMatchButton = (Button) itemView.findViewById(R.id.match_list_item_button);
         }
 
         /*public void bindMatch(Match match) {
@@ -113,6 +116,14 @@ public class MatchListFragment extends Fragment {
             //mAvatar2.setImageDrawable();
             mName2.setText(match.getPlayer1().getName());
             mWins2.setText(match.getPlayer1().getWinLossString());
+
+            mStartMatchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent paddleRegIntent = PaddleRegistrationActivity.newIntent(getActivity());
+                    startActivity(paddleRegIntent);
+                }
+            });
         }
 
     }
