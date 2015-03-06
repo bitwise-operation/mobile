@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <item name="dark" type="color">#FF444951</item>
+        <item name="blue" type="color">#FF11A2B7</item>
+        <item name="green" type="color">#FF93BB3D</item>
+        <item name="red" type="color">#FFF05543</item>
+        <item name="neutral" type="color">#FF979797</item>
+</resources>

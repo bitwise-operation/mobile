@@ -72,6 +72,8 @@ public class MatchListFragment extends Fragment {
     }
 
     private class MatchHolder extends RecyclerView.ViewHolder {
+        private Match mMatch;
+
         private TextView mTimeTextView;
 
         //player 1 - this should prob be a custom view that makes life easier
@@ -106,7 +108,8 @@ public class MatchListFragment extends Fragment {
 
         }*/
 
-        public void bindMatch(Match match) {
+        public void bindMatch(final Match match) {
+
             mTimeTextView.setText(match.getScheduledAt());
 
             //mAvatar1.setImageDrawable(); //load image using URL from dataset and Picasso or maybe glide
@@ -114,13 +117,14 @@ public class MatchListFragment extends Fragment {
             mWins1.setText(match.getPlayer1().getWinLossString());
 
             //mAvatar2.setImageDrawable();
-            mName2.setText(match.getPlayer1().getName());
-            mWins2.setText(match.getPlayer1().getWinLossString());
+            mName2.setText(match.getPlayer2().getName());
+            mWins2.setText(match.getPlayer2().getWinLossString());
 
             mStartMatchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent paddleRegIntent = PaddleRegistrationActivity.newIntent(getActivity());
+                    paddleRegIntent.putExtra(PaddleRegistrationActivity.EXTRA_MATCH, match);
                     startActivity(paddleRegIntent);
                 }
             });

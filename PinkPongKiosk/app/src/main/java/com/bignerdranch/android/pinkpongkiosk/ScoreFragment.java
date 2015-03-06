@@ -9,39 +9,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bignerdranch.android.pinkpongkiosk.model.ActiveMatch;
+import com.bignerdranch.android.pinkpongkiosk.model.Match;
+import com.bignerdranch.android.pinkpongkiosk.model.MockData;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapListener {
 
     private static final String TAG = "ScoreFragment";
-    //model vars; maybe make a player that has an id and a score
-    private int mScoreA; //score can be incremented, decremented, and reset
-    private int mScoreB;
-    private String mPlayerAId; //player has a score; has an id
-    private String mPlayerBId;
+    private static final String ARG_ACTIVE_MATCH = "com.bnr.scorefragment.activeMatch";
+
+    //model items
+    private ActiveMatch mActiveMatch;
 
     //view items
     private TextView mScoreATextView;
     private TextView mScoreBTextView;
 
-    public static ScoreFragment newInstance() {
-        return new ScoreFragment();
+    public static ScoreFragment newInstance(ActiveMatch activeMatch) {
+        ScoreFragment fragment = new ScoreFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_ACTIVE_MATCH, activeMatch);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //init mScoreA and mScoreB
-        //not sure if we will worry about rotation or just lock to portrait mode for now
-        mScoreA = 0;
-        mScoreB = 0;
-
-        mPlayerAId = "1";
-        mPlayerBId = "2";
-
-
+        mActiveMatch = (ActiveMatch) getArguments().getSerializable(ARG_ACTIVE_MATCH);
     }
 
     @Override
@@ -74,18 +73,18 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
     public void onPlayerTapped(String playerId) {
         //increment score for correct player
         Log.d(TAG, "onPlayerTapped " + playerId);
-        if (mPlayerAId.equals(playerId)) {
-            mScoreA++;
-        } else { //player B gets a point if someone other than them scores...oh well
-            mScoreB++;
+        if (mActiveMatch.getPlayer1Paddle().equals(playerId)) {
+            mActiveMatch.incrementPlayer1Score();
+        } else { //player 2 gets a point if someone other than them scores...oh well
+            mActiveMatch.incrementPlayer2Score();
         }
 
         updateUI(); //consider updating only the affected score text view is lag is a problem
     }
 
     private void updateUI(){
-        mScoreATextView.setText(Integer.toString(mScoreA));
-        mScoreBTextView.setText(Integer.toString(mScoreB));
+        mScoreATextView.setText(Integer.toString(mActiveMatch.getPlayer1Score()));
+        mScoreBTextView.setText(Integer.toString(mActiveMatch.getPlayer2Score()));
     }
 
 

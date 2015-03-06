@@ -21,27 +21,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bignerdranch.android.pinkpongkiosk.model.ActiveMatch;
 import com.bignerdranch.android.pinkpongkiosk.model.Match;
 import com.bignerdranch.android.pinkpongkiosk.model.MockData;
 
 
 public class PaddleRegistrationActivity extends NfcSinglFragmentActivity implements PaddleRegFragmentListener{
 
-    private static final String TAG = "PaddleRegistration";
+    public static final String EXTRA_MATCH = "com.bnr.android.paddleregactivity.match";
 
+    private static final String TAG = "PaddleRegistration";
 
     private static enum RegistrationState {
         PLAYER1_PROMPT, PLAYER1_UPDATING, PLAYER2_PROMPT, PLAYER2_UPDATING
     }
 
     //later we should be using the match the user clicked on;  either pass it along or create a singleton to represent the state
-    private static Match mCurrentMatch = MockData.generateMatchList().get(0);
+    //private static Match mCurrentMatch;
+    private static ActiveMatch mActiveMatch;
 
     private RegistrationState mRegistrationState;
 
     private PlayerTapListener mPlayerTapListener; //callback for hosted fragment
 
-    private BroadcastReceiver mBroadcastReciever;
 
     public static Intent newIntent(Context context) {
         return new Intent(context, PaddleRegistrationActivity.class);
@@ -57,7 +59,9 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
 
     @Override
     protected Fragment getFragment() { //called during onCreate -- always add frag for player 1
-        return PaddleRegistrationFragment.newInstance(mCurrentMatch.getPlayer1());
+        Match currentMatch = (Match) getIntent().getSerializableExtra(EXTRA_MATCH);
+        mActiveMatch = new ActiveMatch(currentMatch);
+        return PaddleRegistrationFragment.newInstance(currentMatch.getPlayer1());
     }
 
     @Override
@@ -69,22 +73,11 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
     @Override
     protected void onResume() {
         super.onResume();
-        /*mBroadcastReciever = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "received broadcast!");
-                onUiUpdateComplete();
-            }
-        };
-
-        registerReceiver(mBroadcastReciever, new IntentFilter(PaddleRegistrationFragment.ACTION_PADDLE_REG_FRAG_UPDATE_UI_COMPLETE));*/
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //unregisterReceiver(mBroadcastReciever);
     }
 
     @Override
@@ -95,8 +88,9 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
             switch (mRegistrationState) {
                 case PLAYER1_PROMPT:
                     mRegistrationState = RegistrationState.PLAYER1_UPDATING;
-                    mPlayerTapListener.onPlayerTapped(parsePlayerIdFromNdefDiscoveredIntent(intent));
-                    //todo: update paddle-player1 mapping
+                    String paddleId = parsePlayerIdFromNdefDiscoveredIntent(intent);
+                    mPlayerTapListener.onPlayerTapped(paddleId);
+                    mActiveMatch.setPlayer1Paddle(paddleId);
                     //wait for frag to call back...
                     break;
                 case PLAYER1_UPDATING:
@@ -106,8 +100,9 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     Fragment fragment = fragmentManager.findFragmentById(R.id.activity_single_fragment_fragment_container);
                     setPlayerTapListener((PlayerTapListener)fragment); //HACK!!!  onAttach/onDetach setting of listener was causing null to clobber new frag as listener
-                    mPlayerTapListener.onPlayerTapped(parsePlayerIdFromNdefDiscoveredIntent(intent));
-                    //todo: update paddle-player2 mapping
+                    String paddleId2 = parsePlayerIdFromNdefDiscoveredIntent(intent);
+                    mPlayerTapListener.onPlayerTapped(paddleId2);
+                    mActiveMatch.setPlayer2Paddle(paddleId2);
                     //wait for frag to call back...
                     break;
                 case PLAYER2_UPDATING:
@@ -126,7 +121,7 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
                 break;
             case PLAYER1_UPDATING:
 
-                Fragment newFragment = PaddleRegistrationFragment.newInstance(mCurrentMatch.getPlayer2());
+                Fragment newFragment = PaddleRegistrationFragment.newInstance(mActiveMatch.getMatch().getPlayer2());
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
                 fragmentManager.beginTransaction()
@@ -141,7 +136,9 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
                 break;
             case PLAYER2_UPDATING:
                 //launch Kiosk Activity!
-                startActivity(KioskActivity.newIntent(this));
+                Intent kioskIntent = KioskActivity.newIntent(this);
+                kioskIntent.putExtra(KioskActivity.EXTRA_ACTIVE_MATCH, mActiveMatch);
+                startActivity(kioskIntent);
                 break;
         }
     }

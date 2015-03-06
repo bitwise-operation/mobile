@@ -11,7 +11,7 @@ public class Match implements Serializable{
 
     private String mScheduledAt; //todo: make this a real date at some point
 
-    //status - needs enum: unconfirmed, confirmed, completed, drawn, in progress
+    //todo: add status
 
     public Match(int matchid, Player player1, Player player2, String scheduledAt) {
         setId(matchid);
