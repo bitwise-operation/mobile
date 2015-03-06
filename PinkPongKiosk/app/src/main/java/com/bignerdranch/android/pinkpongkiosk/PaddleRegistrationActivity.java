@@ -95,41 +95,24 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
             switch (mRegistrationState) {
                 case PLAYER1_PROMPT:
                     mRegistrationState = RegistrationState.PLAYER1_UPDATING;
-                    String tappedPlayerId = parsePlayerIdFromNdefDiscoveredIntent(intent);
-                    mPlayerTapListener.onPlayerTapped(tappedPlayerId);
-                    //todo: update paddle-player mapping
+                    mPlayerTapListener.onPlayerTapped(parsePlayerIdFromNdefDiscoveredIntent(intent));
+                    //todo: update paddle-player1 mapping
                     //wait for frag to call back...
                     break;
                 case PLAYER1_UPDATING:
                     break;
                 case PLAYER2_PROMPT:
+                    mRegistrationState = RegistrationState.PLAYER2_UPDATING;
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    Fragment fragment = fragmentManager.findFragmentById(R.id.activity_single_fragment_fragment_container);
+                    setPlayerTapListener((PlayerTapListener)fragment); //HACK!!!  onAttach/onDetach setting of listener was causing null to clobber new frag as listener
+                    mPlayerTapListener.onPlayerTapped(parsePlayerIdFromNdefDiscoveredIntent(intent));
+                    //todo: update paddle-player2 mapping
+                    //wait for frag to call back...
                     break;
                 case PLAYER2_UPDATING:
                     break;
             }
-
-            /*new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mRegistrationState.equals(RegistrationState.PLAYER1_PROMPT)){
-                        mRegistrationState = RegistrationState.PLAYER1_UPDATING;
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //replace fragment for player 1 with fragment for player 2
-                                FragmentManager fragmentManager = getSupportFragmentManager();
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.activity_single_fragment_fragment_container,
-                                                PaddleRegistrationFragment.newInstance(mCurrentMatch.getPlayer2()))
-                                        .setTransition(android.R.anim.slide_in_left)
-                                        .commit();
-                            }
-                        }, 5000);
-
-                    }
-                }
-            });*/
         }
 
     }
@@ -142,17 +125,23 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
                 //do nothing - invalid case
                 break;
             case PLAYER1_UPDATING:
+
+                Fragment newFragment = PaddleRegistrationFragment.newInstance(mCurrentMatch.getPlayer2());
                 FragmentManager fragmentManager = getSupportFragmentManager();
+
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter, R.anim.exit)
-                        .replace(R.id.activity_single_fragment_fragment_container,
-                                PaddleRegistrationFragment.newInstance(mCurrentMatch.getPlayer2()))
-
+                        .replace(R.id.activity_single_fragment_fragment_container, newFragment)
                         .commit();
+                fragmentManager.executePendingTransactions();
+
+                mRegistrationState = RegistrationState.PLAYER2_PROMPT;
                 break;
             case PLAYER2_PROMPT:
                 break;
             case PLAYER2_UPDATING:
+                //launch Kiosk Activity!
+                startActivity(KioskActivity.newIntent(this));
                 break;
         }
     }

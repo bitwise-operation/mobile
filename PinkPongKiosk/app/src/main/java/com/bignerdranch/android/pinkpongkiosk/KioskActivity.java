@@ -1,5 +1,6 @@
 package com.bignerdranch.android.pinkpongkiosk;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.nfc.NdefMessage;
@@ -13,6 +14,10 @@ public class KioskActivity extends NfcSinglFragmentActivity {
 
     private static final String TAG = "KioskActivity";
     private PlayerTapListener mPlayerTapListener;
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, KioskActivity.class);
+    }
 
     public interface PlayerTapListener {
         void onPlayerTapped(String playerId);
