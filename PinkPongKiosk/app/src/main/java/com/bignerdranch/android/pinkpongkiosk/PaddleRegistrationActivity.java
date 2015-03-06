@@ -144,9 +144,10 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
             case PLAYER1_UPDATING:
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter, R.anim.exit)
                         .replace(R.id.activity_single_fragment_fragment_container,
                                 PaddleRegistrationFragment.newInstance(mCurrentMatch.getPlayer2()))
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+
                         .commit();
                 break;
             case PLAYER2_PROMPT:
