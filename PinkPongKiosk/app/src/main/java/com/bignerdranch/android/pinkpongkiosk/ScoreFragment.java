@@ -10,15 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bignerdranch.android.pinkpongkiosk.model.ActiveMatch;
-import com.bignerdranch.android.pinkpongkiosk.model.Match;
-import com.bignerdranch.android.pinkpongkiosk.model.MockData;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -39,6 +35,12 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
     //view items
     private TextView mScoreATextView;
     private TextView mScoreBTextView;
+
+    private CircleImageView mAvatar1;
+    private CircleImageView mAvatar2;
+
+    private TextView mName1;
+    private TextView mName2;
 
 
     public static ScoreFragment newInstance(ActiveMatch activeMatch) {
@@ -80,7 +82,13 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
         mScoreATextView = (TextView) v.findViewById(R.id.fragment_score_a_text_view);
         mScoreBTextView = (TextView) v.findViewById(R.id.fragment_score_b_text_view);
 
-        updateUI();
+        mName1 = (TextView) v.findViewById(R.id.fragment_score_a_name_text_view);
+        mName2 = (TextView) v.findViewById(R.id.fragment_score_b_name_text_view);
+
+        mAvatar1 = (CircleImageView) v.findViewById(R.id.fragment_score_avatar1);
+        mAvatar2 = (CircleImageView) v.findViewById(R.id.fragment_score_avatar2);
+
+        updateUi();
 
         return v;
     }
@@ -127,15 +135,29 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
                     });
         }
 
-        updateUI(); //consider updating only the affected score text view is lag is a problem
+        updateScoreUi(); //consider updating only the affected score text view is lag is a problem
     }
 
-    private void updateUI(){
+    private void updateScoreUi(){
         mScoreATextView.setText(Integer.toString(mActiveMatch.getPlayer1Score()));
         mScoreBTextView.setText(Integer.toString(mActiveMatch.getPlayer2Score()));
     }
 
 
+    private void updateUi(){
+        mScoreATextView.setText(Integer.toString(mActiveMatch.getPlayer1Score()));
+        mScoreBTextView.setText(Integer.toString(mActiveMatch.getPlayer2Score()));
 
+        Picasso.with(getActivity())
+                .load(mActiveMatch.getMatch().getPlayer1().getAvatarUrl())
+                .into(mAvatar1);
+
+        Picasso.with(getActivity())
+                .load(mActiveMatch.getMatch().getPlayer2().getAvatarUrl())
+                .into(mAvatar2);
+
+        mName1.setText(mActiveMatch.getMatch().getPlayer1().getName());
+        mName2.setText(mActiveMatch.getMatch().getPlayer2().getName());
+    }
 
 }
