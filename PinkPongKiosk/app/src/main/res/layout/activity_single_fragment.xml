@@ -17,14 +17,16 @@
                                        android:layout_height="250dp"
 
                                        android:background="@color/dark"
-                                       app:contentInsetEnd="10dp"
-                                       app:contentInsetStart="10dp"
-                                       android:gravity="top|left"
 
-
-
+                                       app:contentInsetEnd="0dp"
+                                       app:contentInsetStart="0dp"
+                                       android:gravity="top"
+                                       app:titleMarginTop="10dp"
+                                       app:titleMarginStart="40dp"
+                                       
 
         >
+
     </android.support.v7.widget.Toolbar>
 
 </FrameLayout>
