@@ -57,6 +57,8 @@ public class GameCompleteFragment extends Fragment {
 
     }
 
+    //beware...redundant methods on the horizon...
+
     private View setupUiTie(View v) {
         mScoreTextView = (TextView) v.findViewById(R.id.fragment_game_complete_score_text_view);
         mStatusTextView = (TextView) v.findViewById(R.id.fragment_game_complete_win_text_view);
