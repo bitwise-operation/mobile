@@ -104,7 +104,7 @@ public class PaddleRegistrationFragment extends Fragment implements PlayerTapLis
                     public void run() {
                     mPaddleRegFragmentListener.onUiUpdateComplete();
                     }
-                }, 5500);
+                }, 2000);
                 break;
         }
     }
@@ -126,8 +126,9 @@ public class PaddleRegistrationFragment extends Fragment implements PlayerTapLis
     }
 
     private void updateUiSuccess() {
+        mTransitionDrawable.startTransition(500);
         mPromptTextView.setText(PROMPT_SUCCESS);
-        mTransitionDrawable.startTransition(5000);
+
     }
 
 }
