@@ -158,16 +158,13 @@ public class MatchListFragment extends Fragment {
             mStartMatchButton = (Button) itemView.findViewById(R.id.match_list_item_button);
         }
 
-        /*public void bindMatch(Match match) {
-
-        }*/
 
         public void bindMatch(final Match match) {
 
             mTimeTextView.setText(match.getScheduledAt());
 
             Picasso.with(getActivity())
-                    .load("http://www.bignerdranch.com/img/nerds/headshots/aaron-hillegass.jpg")
+                    .load(match.getPlayer1().getAvatarUrl())
                     .into(mAvatar1);
             //mAvatar1.setImageDrawable(); //load image using URL from dataset and Picasso or maybe glide
             mName1.setText(match.getPlayer1().getName());
@@ -175,7 +172,7 @@ public class MatchListFragment extends Fragment {
 
 
             Picasso.with(getActivity())
-                    .load("http://www.bignerdranch.com/img/nerds/headshots/stacy-henry.jpg")
+                    .load(match.getPlayer2().getAvatarUrl())
                     .into(mAvatar2);
             mName2.setText(match.getPlayer2().getName());
             mWins2.setText(match.getPlayer2().getWinLossString());

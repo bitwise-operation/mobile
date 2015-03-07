@@ -2,6 +2,7 @@ package com.bignerdranch.android.pinkpongkiosk;
 
 import com.bignerdranch.android.pinkpongkiosk.model.Match;
 import com.bignerdranch.android.pinkpongkiosk.model.MatchResponse;
+import com.squareup.okhttp.Response;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ import retrofit.http.Path;
 
 public interface PinkPonkApi {
 
-    @GET("/matches") //@GET("/matches/confirmed")
+    @GET("/matches/confirmed")
     void getConfirmedMatches(Callback<MatchResponse> callback);
 
-    @POST("/matches/{match_id}/users/{user_id}")
-    void groupList(@Path("match_id") int matchId, @Path("user_id") int userId, Callback<Void> callback);
+    @POST("/matches/{match_id}/scores/{user_id}")
+    void incrementScore(@Path("match_id") int matchId, @Path("user_id") int userId, Callback<Response> callback);
 }
