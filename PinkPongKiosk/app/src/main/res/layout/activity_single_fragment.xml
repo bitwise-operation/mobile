@@ -21,9 +21,9 @@
                                        app:contentInsetEnd="0dp"
                                        app:contentInsetStart="0dp"
                                        android:gravity="top"
-                                       app:titleMarginTop="10dp"
-                                       app:titleMarginStart="40dp"
-                                       
+                                       app:titleMarginTop="0dp"
+                                       app:titleMarginStart="35dp"
+
 
         >
 
