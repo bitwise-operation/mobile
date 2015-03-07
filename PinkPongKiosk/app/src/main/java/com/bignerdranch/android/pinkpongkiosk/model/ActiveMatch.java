@@ -2,6 +2,9 @@ package com.bignerdranch.android.pinkpongkiosk.model;
 
 import java.io.Serializable;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 public class ActiveMatch implements Serializable {
     //represents a match either in play or in paddle assignment mode
     //maybe make this as singleton?
@@ -12,11 +15,31 @@ public class ActiveMatch implements Serializable {
     private String mPlayer2Paddle;
     private int mPlayer1Score;
     private int mPlayer2Score;
+    private boolean mIsDraw;
 
     public ActiveMatch(Match match) {
         mMatch = match;
         mPlayer1Score = 0;
         mPlayer2Score = 0;
+        mIsDraw = false;
+    }
+
+    public boolean isTie() {
+        return mPlayer1Score == mPlayer2Score;
+    }
+
+    public Player getWinner() {
+        if (mPlayer1Score > mPlayer2Score) {
+            return mMatch.getPlayer1();
+        } else {
+            return mMatch.getPlayer2();
+        }
+    }
+
+    public String getScoreString(){
+        int winScore = max(getPlayer1Score(), getPlayer2Score());
+        int loseScore = min(getPlayer1Score(), getPlayer2Score());
+        return winScore + "-" + loseScore;
     }
 
     public void setPlayer1Paddle(String paddleId) {
@@ -69,5 +92,13 @@ public class ActiveMatch implements Serializable {
 
     public void incrementPlayer2Score() {
         mPlayer2Score++;
+    }
+
+    public boolean isDraw() {
+        return mIsDraw;
+    }
+
+    public void setIsDraw(boolean isDraw) {
+        mIsDraw = isDraw;
     }
 }

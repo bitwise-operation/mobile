@@ -135,6 +135,7 @@
             android:layout_marginTop="0dp">
 
             <Button
+                android:id="@+id/fragment_score_draw_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/neutral"
@@ -145,6 +146,7 @@
                 />
 
             <Button
+                android:id="@+id/fragment_score_finish_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/green"

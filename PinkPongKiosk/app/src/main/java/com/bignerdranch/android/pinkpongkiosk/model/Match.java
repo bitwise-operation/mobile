@@ -27,6 +27,9 @@ public class Match implements Serializable{
     @SerializedName("state")
     private String mState; //this should probably be mapped to some sort of enum...
 
+    @SerializedName("match_time")
+    private String mMatchTime; //hack to display time right way...should really use joda time and process on client
+
     public Match(int matchid, Player player1, Player player2, String scheduledAt) {
         setId(matchid);
         setPlayer1(player1);
@@ -73,5 +76,13 @@ public class Match implements Serializable{
 
     public void setState(String state) {
         mState = state;
+    }
+
+    public String getMatchTime() {
+        return mMatchTime;
+    }
+
+    public void setMatchTime(String matchTime) {
+        mMatchTime = matchTime;
     }
 }

@@ -18,4 +18,11 @@ public interface PinkPonkApi {
 
     @POST("/matches/{match_id}/scores/{user_id}")
     void incrementScore(@Path("match_id") int matchId, @Path("user_id") int userId, Callback<Response> callback);
+
+    @POST("/matches/{match_id}/draw")
+    void drawMatch(@Path("match_id") int matchId, Callback<Response> callback);
+
+    @POST("/matches/{match_id}/complete")
+    void completeMatch(@Path("match_id") int matchId, Callback<Response> callback);
+
 }

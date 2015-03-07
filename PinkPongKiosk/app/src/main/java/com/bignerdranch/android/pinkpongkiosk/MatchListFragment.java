@@ -164,7 +164,7 @@ public class MatchListFragment extends Fragment {
 
         public void bindMatch(final Match match) {
 
-            mTimeTextView.setText(match.getScheduledAt());
+            mTimeTextView.setText(match.getMatchTime());
 
             Picasso.with(getActivity())
                     .load(match.getPlayer1().getAvatarUrl())

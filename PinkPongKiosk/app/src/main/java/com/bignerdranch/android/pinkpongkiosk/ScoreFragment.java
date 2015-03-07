@@ -3,13 +3,16 @@ package com.bignerdranch.android.pinkpongkiosk;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.bignerdranch.android.pinkpongkiosk.model.ActiveMatch;
+import com.bignerdranch.android.pinkpongkiosk.model.Player;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
@@ -28,6 +31,7 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
 
     //model items
     private ActiveMatch mActiveMatch;
+    private GameState mGameState;
 
     //web service
     private PinkPonkApi mPinkPonkApi;
@@ -41,6 +45,12 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
 
     private TextView mName1;
     private TextView mName2;
+    private Button mDrawButton;
+    private Button mFinishButton;
+
+    private enum GameState{
+        ACTIVE_PLAY, COMPLETE, DRAW
+    }
 
 
     public static ScoreFragment newInstance(ActiveMatch activeMatch) {
@@ -65,6 +75,7 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
                 .build();
 
         mPinkPonkApi = restAdapter.create(PinkPonkApi.class);
+        mGameState = GameState.ACTIVE_PLAY;
     }
 
     @Override
@@ -88,7 +99,9 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
         mAvatar1 = (CircleImageView) v.findViewById(R.id.fragment_score_avatar1);
         mAvatar2 = (CircleImageView) v.findViewById(R.id.fragment_score_avatar2);
 
-        updateUi();
+        mDrawButton = (Button) v.findViewById(R.id.fragment_score_draw_button);
+        mFinishButton = (Button) v.findViewById(R.id.fragment_score_finish_button);
+        setupUi();
 
         return v;
     }
@@ -102,7 +115,10 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
     @Override
     public void onPlayerTapped(String playerId) {
         //increment score for correct player
-        Log.d(TAG, "onPlayerTapped " + playerId);
+        if (mGameState != GameState.ACTIVE_PLAY) {
+            return;
+        }
+
         if (mActiveMatch.getPlayer1Paddle().equals(playerId)) {
             mActiveMatch.incrementPlayer1Score();
             mPinkPonkApi.incrementScore(mActiveMatch.getMatch().getId(),
@@ -144,7 +160,7 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
     }
 
 
-    private void updateUi(){
+    private void setupUi(){
         mScoreATextView.setText(Integer.toString(mActiveMatch.getPlayer1Score()));
         mScoreBTextView.setText(Integer.toString(mActiveMatch.getPlayer2Score()));
 
@@ -158,6 +174,62 @@ public class ScoreFragment extends Fragment implements KioskActivity.PlayerTapLi
 
         mName1.setText(mActiveMatch.getMatch().getPlayer1().getName());
         mName2.setText(mActiveMatch.getMatch().getPlayer2().getName());
+
+        mDrawButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mGameState = GameState.DRAW;
+                //send draw message to server
+                mPinkPonkApi.drawMatch(mActiveMatch.getMatch().getId(),
+                        new Callback<Response>() {
+                            @Override
+                            public void success(Response response, retrofit.client.Response response2) {
+
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+
+                            }
+                        });
+                //todo: show draw screen
+                mActiveMatch.setIsDraw(true);
+                showGameCompleteFragment();
+            }
+        });
+
+        mFinishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mGameState = GameState.COMPLETE;
+                //send completed message to server
+                mPinkPonkApi.completeMatch(mActiveMatch.getMatch().getId(),
+                        new Callback<Response>() {
+                            @Override
+                            public void success(Response response, retrofit.client.Response response2) {
+
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+
+                            }
+                        });
+                //show win screen
+
+                showGameCompleteFragment();
+            }
+        });
+    }
+
+    private void showGameCompleteFragment() {
+        GameCompleteFragment frag = GameCompleteFragment.newInstance(mActiveMatch);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.enter, R.anim.exit)
+                .replace(R.id.activity_single_fragment_fragment_container, frag)
+                .commit();
+        fragmentManager.executePendingTransactions();
     }
 
 }
