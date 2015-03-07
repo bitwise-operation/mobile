@@ -2,6 +2,7 @@ package com.bignerdranch.android.pinkpongkiosk;
 
 
 import android.app.Activity;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -46,7 +47,7 @@ public class PaddleRegistrationFragment extends Fragment implements PlayerTapLis
     private TextView mNameTextView;
     private TextView mPromptTextView;
     private ImageView mImageView;
-
+    private TransitionDrawable mTransitionDrawable;
 
 
     public static PaddleRegistrationFragment newInstance(Player player){
@@ -78,6 +79,7 @@ public class PaddleRegistrationFragment extends Fragment implements PlayerTapLis
         mNameTextView = (TextView) v.findViewById(R.id.fragment_paddle_reg_name_text_view);
         mPromptTextView = (TextView) v.findViewById(R.id.fragment_paddle_reg_prompt_text_view);
         mImageView = (ImageView) v.findViewById(R.id.fragment_paddle_reg_image_view);
+        mTransitionDrawable = (TransitionDrawable) mImageView.getBackground();
 
         updateUI();
 
@@ -96,20 +98,13 @@ public class PaddleRegistrationFragment extends Fragment implements PlayerTapLis
         switch (mRegistrationState) {
             case PLAYER_PROMPT:
                 mRegistrationState = RegistrationState.PLAYER_SUCCESS;
-                //reflect success in UI
-                Toast.makeText(getActivity(), playerId, Toast.LENGTH_LONG).show();
-                //TransitionDrawable transition = (TransitionDrawable) mImageView.getBackground();
-                //transition.reverseTransition(10000);
-                updateUI();
+                updateUI(); //reflect success in UI
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //post local broadcast
-                        //LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getActivity());
-                        //bm.sendBroadcast(newIntent(getActivity()).setAction(ACTION_PADDLE_REG_FRAG_UPDATE_UI_COMPLETE)); //notify hosting activity ui update is complete...couldn't use listener pattern b/c of cyclical reference error
-                        mPaddleRegFragmentListener.onUiUpdateComplete();
+                    mPaddleRegFragmentListener.onUiUpdateComplete();
                     }
-                }, 5000);
+                }, 5500);
                 break;
         }
     }
@@ -132,6 +127,7 @@ public class PaddleRegistrationFragment extends Fragment implements PlayerTapLis
 
     private void updateUiSuccess() {
         mPromptTextView.setText(PROMPT_SUCCESS);
+        mTransitionDrawable.startTransition(5000);
     }
 
 }

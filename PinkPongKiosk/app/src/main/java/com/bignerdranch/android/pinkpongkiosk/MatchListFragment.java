@@ -48,10 +48,6 @@ public class MatchListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                .create();*/
-
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://pink-ponk.herokuapp.com/")
                 .setLogLevel(RestAdapter.LogLevel.FULL)
