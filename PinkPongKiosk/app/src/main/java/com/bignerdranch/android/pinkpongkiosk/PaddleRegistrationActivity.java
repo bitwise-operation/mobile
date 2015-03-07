@@ -14,6 +14,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -68,6 +69,9 @@ public class PaddleRegistrationActivity extends NfcSinglFragmentActivity impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mRegistrationState = RegistrationState.PLAYER1_PROMPT;
+        ActionBar toolbar = getSupportActionBar();
+        toolbar.setTitle("Assign Paddles");
+        //toolbar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

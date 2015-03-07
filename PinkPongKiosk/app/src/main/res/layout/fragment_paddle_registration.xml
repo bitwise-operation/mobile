@@ -19,16 +19,20 @@
 
         <TextView
             android:id="@+id/fragment_paddle_reg_name_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="248dp"
             android:layout_gravity="center"
-            android:textSize="30dp"
+            android:gravity="center"
+            android:background="@color/red"
+            android:textSize="40dp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="30dp"
             />
 
         <ImageView
             android:id="@+id/fragment_paddle_reg_image_view"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/paddle_transition"/>
 
@@ -38,6 +42,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="30dp"
+            android:textColor="@color/dark"
+            android:layout_marginTop="40dp"
+
             />
     </LinearLayout>
 

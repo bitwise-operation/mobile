@@ -43,6 +43,7 @@ public class KioskActivity extends NfcSinglFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //good android developers account for rotation and override onSavedInstanceState...right now I only have time to be bad...
+        getSupportActionBar().setTitle("In Play");
     }
 
     @Override

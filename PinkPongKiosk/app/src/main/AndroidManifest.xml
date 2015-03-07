@@ -28,7 +28,8 @@
             android:name=".PaddleRegistrationActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:noHistory="true" >
+            android:noHistory="true"
+            android:parentActivityName=".MatchListActivity">
         </activity>
     </application>
 

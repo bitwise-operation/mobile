@@ -14,4 +14,9 @@ public class MatchListActivity extends SingleFragmentActivity {
         return MatchListFragment.newInstance();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("Scheduled Matches");
+    }
 }

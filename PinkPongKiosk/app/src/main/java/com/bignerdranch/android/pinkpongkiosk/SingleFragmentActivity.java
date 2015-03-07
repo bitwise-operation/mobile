@@ -20,7 +20,7 @@ public abstract class SingleFragmentActivity extends ActionBarActivity {
 
         Toolbar actionBar = (Toolbar) findViewById(R.id.actionBar);
         setSupportActionBar(actionBar);
-        
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.activity_single_fragment_fragment_container);
 
