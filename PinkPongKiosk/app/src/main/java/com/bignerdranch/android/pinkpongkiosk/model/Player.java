@@ -1,13 +1,24 @@
 package com.bignerdranch.android.pinkpongkiosk.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Player implements Serializable{
 
+    @SerializedName("id")
     private int mId;
+
+    @SerializedName("name")
     private String mName;
+
+    @SerializedName("avatar_url")
     private String mAvatarUrl;
+
+    @SerializedName("win_count")
     private int mWins;
+
+    @SerializedName("loss_count")
     private int mLosses;
 
     public Player(int id, String name, String avatarUrl, int wins, int losses) {

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +14,30 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.bignerdranch.android.pinkpongkiosk.model.Match;
+import com.bignerdranch.android.pinkpongkiosk.model.MatchResponse;
 import com.bignerdranch.android.pinkpongkiosk.model.MockData;
+import com.squareup.okhttp.OkHttpClient;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.android.AndroidLog;
+import retrofit.client.OkClient;
+import retrofit.client.Response;
 
 public class MatchListFragment extends Fragment {
 
-    private static List<Match> mMatches = MockData.generateMatchList();
+    private static final String TAG = "MatchListFragment";
+
+    //http://pink-ponk.herokuapp.com/
 
     private RecyclerView mRecyclerView;
+    private PinkPonkApi mPinkPonkApi;
+    private List<Match> mMatches;
 
     public static MatchListFragment newInstance() {
         return new MatchListFragment();
@@ -33,6 +46,21 @@ public class MatchListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .create();*/
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://pink-ponk.herokuapp.com/")
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLog(new AndroidLog(TAG))
+                .setClient(new OkClient(new OkHttpClient()))
+                .build();
+
+
+        mMatches = new ArrayList<>();
+        mPinkPonkApi = restAdapter.create(PinkPonkApi.class);
     }
 
     @Override
@@ -43,7 +71,32 @@ public class MatchListFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(new MatchAdapter(mMatches));
 
+        setupAdapter();
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPinkPonkApi.getConfirmedMatches(new Callback<MatchResponse>() {
+            @Override
+            public void success(MatchResponse matchResponse, Response response) {
+                Log.d(TAG, "matches request success!");
+                mMatches = matchResponse.getMatches();
+                setupAdapter();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "matches request failed " + error.toString());
+            }
+        });
+    }
+
+    private void setupAdapter() {
+        if (isAdded()) {
+            mRecyclerView.setAdapter(new MatchAdapter(mMatches));
+        }
     }
 
     private class MatchAdapter extends RecyclerView.Adapter<MatchHolder> {
@@ -131,5 +184,7 @@ public class MatchListFragment extends Fragment {
         }
 
     }
+
+
 
 }
