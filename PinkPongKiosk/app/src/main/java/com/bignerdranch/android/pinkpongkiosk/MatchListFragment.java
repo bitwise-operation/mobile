@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.bignerdranch.android.pinkpongkiosk.model.Match;
 import com.bignerdranch.android.pinkpongkiosk.model.MatchResponse;
 import com.bignerdranch.android.pinkpongkiosk.model.MockData;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
 
@@ -29,6 +31,7 @@ import retrofit.RetrofitError;
 import retrofit.android.AndroidLog;
 import retrofit.client.OkClient;
 import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
 public class MatchListFragment extends Fragment {
 
@@ -48,11 +51,15 @@ public class MatchListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Gson gson = new GsonBuilder()
+        //        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://pink-ponk.herokuapp.com/")
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setLog(new AndroidLog(TAG))
                 .setClient(new OkClient(new OkHttpClient()))
+                //.setConverter(new GsonConverter(gson))
                 .build();
 
 

@@ -2,6 +2,11 @@ package com.bignerdranch.android.pinkpongkiosk.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -58,7 +63,8 @@ public class Match implements Serializable{
     }
 
     public void setScheduledAt(String scheduledAt) {
-        mScheduledAt = scheduledAt;
+        DateTime x = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ").parseDateTime(mScheduledAt); //this isn't exactly right -- really should use X for zone but isn't supported here
+        mScheduledAt = x.toString("h:mma");
     }
 
     public String getState() {
