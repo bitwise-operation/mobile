@@ -17,6 +17,7 @@ import com.bignerdranch.android.pinkpongkiosk.model.Match;
 import com.bignerdranch.android.pinkpongkiosk.model.MatchResponse;
 import com.bignerdranch.android.pinkpongkiosk.model.MockData;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,11 +166,17 @@ public class MatchListFragment extends Fragment {
 
             mTimeTextView.setText(match.getScheduledAt());
 
+            Picasso.with(getActivity())
+                    .load("http://www.bignerdranch.com/img/nerds/headshots/aaron-hillegass.jpg")
+                    .into(mAvatar1);
             //mAvatar1.setImageDrawable(); //load image using URL from dataset and Picasso or maybe glide
             mName1.setText(match.getPlayer1().getName());
             mWins1.setText(match.getPlayer1().getWinLossString());
 
-            //mAvatar2.setImageDrawable();
+
+            Picasso.with(getActivity())
+                    .load("http://www.bignerdranch.com/img/nerds/headshots/stacy-henry.jpg")
+                    .into(mAvatar2);
             mName2.setText(match.getPlayer2().getName());
             mWins2.setText(match.getPlayer2().getWinLossString());
 
